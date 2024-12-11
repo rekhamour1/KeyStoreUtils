@@ -1,8 +1,8 @@
 package me.rekha.keystoreUtils.core.customePrefrence
 
+import java.security.Key
 import javax.crypto.Cipher
-import javax.crypto.SecretKey
-
+import javax.crypto.KeyGenerator
  class EncryptionHandler(private val key: Key) {
     fun encrypt(data: String): String {
         val cipher = Cipher.getInstance("AES")
