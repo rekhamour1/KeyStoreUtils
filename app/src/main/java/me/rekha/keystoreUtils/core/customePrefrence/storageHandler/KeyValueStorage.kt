@@ -1,4 +1,4 @@
-package me.rekha.keystoreUtils.core.customePrefrence
+package me.rekha.keystoreUtils.core.customePrefrence.storageHandler
 
 interface KeyValueStorage {
     fun <T> save(key: String, value: T)

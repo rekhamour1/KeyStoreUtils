@@ -1,4 +1,4 @@
-package me.rekha.keystoreUtils.core.customePrefrence
+package me.rekha.keystoreUtils.core.customePrefrence.storageHandler
 
 import android.content.Context
 import java.io.File

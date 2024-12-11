@@ -1,4 +1,4 @@
-package me.rekha.keystoreUtils.core.customePrefrence
+package me.rekha.keystoreUtils.core.customePrefrence.storageHandler
 
 import com.google.gson.Gson
 import java.io.File

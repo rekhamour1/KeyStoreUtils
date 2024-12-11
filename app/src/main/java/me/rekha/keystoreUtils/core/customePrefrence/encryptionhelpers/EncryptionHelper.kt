@@ -1,4 +1,4 @@
-package me.rekha.keystoreUtils.core.customePrefrence
+package me.rekha.keystoreUtils.core.customePrefrence.encryptionhelpers
 
 import java.security.Key
 import javax.crypto.KeyGenerator

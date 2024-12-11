@@ -7,10 +7,9 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import me.rekha.keystoreUtils.core.CustomKeyValueStore
-import me.rekha.keystoreUtils.core.customePrefrence.EncryptionHelper
+import me.rekha.keystoreUtils.core.customePrefrence.customeKeyValueStorageManager.CustomKeyValueStore
+import me.rekha.keystoreUtils.core.customePrefrence.encryptionhelpers.EncryptionHelper
 import me.rekha.keystoreUtils.data.model.User
-import javax.crypto.KeyGenerator
 import javax.crypto.SecretKey
 
 @AndroidEntryPoint

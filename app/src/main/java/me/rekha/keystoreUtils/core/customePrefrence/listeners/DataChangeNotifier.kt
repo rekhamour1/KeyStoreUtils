@@ -1,4 +1,4 @@
-package me.rekha.keystoreUtils.core.customePrefrence
+package me.rekha.keystoreUtils.core.customePrefrence.listeners
 
 class DataChangeNotifier {
     private val listeners = mutableListOf<DataChangeListener>()

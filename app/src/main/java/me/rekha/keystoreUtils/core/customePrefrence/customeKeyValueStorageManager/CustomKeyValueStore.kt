@@ -1,18 +1,14 @@
-package me.rekha.keystoreUtils.core
+package me.rekha.keystoreUtils.core.customePrefrence.customeKeyValueStorageManager
 
 import android.content.Context
 import com.google.gson.Gson
 import com.google.gson.JsonSyntaxException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import kotlinx.serialization.json.Json
-import kotlinx.serialization.serializer
-import me.rekha.keystoreUtils.core.customePrefrence.EncryptionHandler
-import me.rekha.keystoreUtils.core.customePrefrence.FileHandler
+import me.rekha.keystoreUtils.core.customePrefrence.encryptionhelpers.EncryptionHandler
+import me.rekha.keystoreUtils.core.customePrefrence.storageHandler.FileHandler
 import java.io.File
 import java.security.Key
-import javax.crypto.Cipher
-import javax.crypto.KeyGenerator
 
 class CustomKeyValueStore private constructor(
     private val fileHandler: FileHandler,
