@@ -2,16 +2,130 @@ package me.rekha.keystoreUtils.core
 
 import android.content.Context
 import com.google.gson.Gson
+import com.google.gson.JsonSyntaxException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.serializer
+import me.rekha.keystoreUtils.core.customePrefrence.EncryptionHandler
+import me.rekha.keystoreUtils.core.customePrefrence.FileHandler
 import java.io.File
 import java.security.Key
 import javax.crypto.Cipher
 import javax.crypto.KeyGenerator
 
 class CustomKeyValueStore private constructor(
+    private val fileHandler: FileHandler,
+    private val encryptionHandler: EncryptionHandler?,
+    private val gson: Gson = Gson(),
+) {
+    private val listeners = mutableSetOf<() -> Unit>()
+
+    // --- Factory Pattern ---
+    class Builder(private val context: Context) {
+        private var fileName: String = "custom_store.json"
+        private var isPrivate: Boolean = true
+        private var encryptionKey: Key? = null
+        private var enableEncryption: Boolean = false
+
+        fun setFileName(name: String) = apply { this.fileName = name }
+        fun setPrivateMode(isPrivate: Boolean) = apply { this.isPrivate = isPrivate }
+        fun setEncryptionKey(key: Key) = apply { this.encryptionKey = key }
+        fun enableEncryption(enable: Boolean) = apply { this.enableEncryption = enable }
+
+        fun build(): CustomKeyValueStore {
+            val file = if (isPrivate) {
+                File(context.filesDir, fileName)
+            } else {
+                File(context.getExternalFilesDir(null), fileName)
+            }
+            val fileHandler = FileHandler(file)
+            val encryptionHandler = if (enableEncryption && encryptionKey != null) {
+                EncryptionHandler(encryptionKey)
+            } else {
+                null
+            }
+            return CustomKeyValueStore(fileHandler, encryptionHandler)
+        }
+    }
+
+    init {
+        fileHandler.initialize()
+    }
+
+    // Save a value
+    suspend fun <T> put(key: String, value: T) {
+        withContext(Dispatchers.IO) {
+            val data = fileHandler.readData().toMutableMap()
+            data[key] = gson.toJson(value)
+            val json = gson.toJson(data)
+            fileHandler.writeData(encrypt(json))
+            notifyListeners()
+        }
+    }
+
+    // Retrieve a value
+    suspend fun <T> get(key: String, clazz: Class<T>, defaultValue: T? = null): T? {
+        return withContext(Dispatchers.IO) {
+            val data = fileHandler.readData()
+            val jsonValue = data[key]
+            if (jsonValue != null) {
+                try {
+                    gson.fromJson(decrypt(jsonValue), clazz)
+                } catch (e: JsonSyntaxException) {
+                    defaultValue
+                }
+            } else {
+                defaultValue
+            }
+        }
+    }
+
+    // Remove a key
+    suspend fun remove(key: String) {
+        withContext(Dispatchers.IO) {
+            val data = fileHandler.readData().toMutableMap()
+            data.remove(key)
+            val json = gson.toJson(data)
+            fileHandler.writeData(encrypt(json))
+            notifyListeners()
+        }
+    }
+
+    // Clear all data
+    suspend fun clear() {
+        withContext(Dispatchers.IO) {
+            fileHandler.writeData(encrypt("{}"))
+            notifyListeners()
+        }
+    }
+
+    // Add a listener
+    fun addListener(listener: () -> Unit) {
+        listeners.add(listener)
+    }
+
+    // Remove a listener
+    fun removeListener(listener: () -> Unit) {
+        listeners.remove(listener)
+    }
+
+    // Notify listeners
+    private fun notifyListeners() {
+        listeners.forEach { it.invoke() }
+    }
+
+    // Encrypt data
+    private fun encrypt(data: String): String {
+        return encryptionHandler?.encrypt(data) ?: data
+    }
+
+    // Decrypt data
+    private fun decrypt(data: String): String {
+        return encryptionHandler?.decrypt(data) ?: data
+    }
+}
+/*(
     private val context: Context,
     fileName: String = "custom_store.json",
     private val isPrivate: Boolean = true, // Private or Public mode
@@ -180,3 +294,4 @@ class CustomKeyValueStore private constructor(
         }
     }
 }
+*/
