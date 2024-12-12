@@ -29,7 +29,7 @@ class MainActivity : ComponentActivity() {
                     .setFileName("user_store.json")
                     .setPrivateMode(true)
                     .setEncryptionKey(EncryptionHelper.generateEncryptionKey())
-                    .enableEncryption(true)
+                    .enableEncryption(false)
                     .build()
 
 // Save a complex object
