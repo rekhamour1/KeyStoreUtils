@@ -55,7 +55,7 @@ class CustomKeyValueStore private constructor(
             val data = fileHandler.readData().toMutableMap()
             data[key] = gson.toJson(value)
             val json = gson.toJson(data)
-            fileHandler.writeData(encrypt(json))
+            fileHandler.writeData(json)
             notifyListeners()
         }
     }
@@ -67,7 +67,7 @@ class CustomKeyValueStore private constructor(
             val jsonValue = data[key]
             if (jsonValue != null) {
                 try {
-                    gson.fromJson(decrypt(jsonValue), clazz)
+                    gson.fromJson(jsonValue, clazz)
                 } catch (e: JsonSyntaxException) {
                     defaultValue
                 }

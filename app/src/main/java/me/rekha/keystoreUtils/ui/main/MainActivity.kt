@@ -35,11 +35,17 @@ class MainActivity : ComponentActivity() {
 // Save a complex object
                 val user = User(1, "John Doe")
                 customStore.put("user", user)
+                customStore.put("day","thursday")
 
 // Retrieve a complex object
                 val retrievedUser: User? = customStore.get("user", User::class.java)
+
                 println("Retrieved User: $retrievedUser")
                 Log.d("MainActivity", "Retrieved Username: ${retrievedUser?.name}")
+                val day = customStore.get("day",String::class.java)
+                println("Retrieved day: $day")
+
+
             } catch (e: Exception) {
                 Log.e("MainActivity", "Error storing or retrieving username", e)
             }
