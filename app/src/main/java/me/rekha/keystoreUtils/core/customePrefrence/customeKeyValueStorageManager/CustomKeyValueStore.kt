@@ -37,7 +37,7 @@ class CustomKeyValueStore private constructor(
             }
             val fileHandler = FileHandler(file)
             val encryptionHandler = if (enableEncryption && encryptionKey != null) {
-                EncryptionHandler(encryptionKey)
+                EncryptionHandler(encryptionKey!!)
             } else {
                 null
             }
